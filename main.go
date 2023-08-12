@@ -40,6 +40,7 @@ func (r *IntRingBuffer) Push(digit int) {
 		r.end++
 		r.data[r.end] = digit
 	}
+	fmt.Println("Данные добавлены в буфер")
 	r.access.Unlock()
 }
 
@@ -52,6 +53,7 @@ func (r *IntRingBuffer) Pop() []int {
 	}
 	filteredData := r.data[:r.end+1]
 	r.end = -1
+	fmt.Println("Данные извлечены из буфера")
 	r.access.Unlock()
 	return filteredData
 }
@@ -79,6 +81,7 @@ func main() {
 					continue
 				}
 				dataSourse <- in
+				fmt.Println("Данные считаны из консоли")
 			}
 		}()
 		return dataSourse, done
@@ -99,6 +102,7 @@ func main() {
 				}
 			}
 		}()
+		fmt.Println("Отфильтрованы негативные числа")
 		return notNegativeData
 	}
 
@@ -117,6 +121,7 @@ func main() {
 				}
 			}
 		}()
+		fmt.Println("Отфильтрованы числа равные 0 и кратные 3-м")
 		return notMultiple3Data
 	}
 
@@ -159,7 +164,7 @@ func main() {
 		for {
 			select {
 			case data := <-bufferChan:
-				fmt.Println("Отфильтраванные данные из буфера: ", data)
+				fmt.Println("Отфильтрованные данные из буфера: ", data)
 			case <-done:
 				return
 			}
